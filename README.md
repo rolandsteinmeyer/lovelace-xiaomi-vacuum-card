@@ -44,6 +44,7 @@ to `<config>/www/img/` or configure your own preferred path.
 | type | string | **Required** | `custom:xiaomi-vacuum-card`
 | entity | string | **Required** | `vacuum.my_xiaomi_vacuum`
 | name | string/bool | `friendly_name` | Override friendly name (set to `false` to hide)
+| battery_entity | string | *(see below)* | Battery state from external sensor
 | image | string/bool | `false` | Set path/filename of background image (i.e. `/local/img/vacuum.png`)
 | state | [Entity Data](#entity-data) | *(see below)* | Set to `false` to hide all states
 | attributes | [Entity Data](#entity-data) | *(see below)* | Set to `false` to hide all attributes
@@ -215,6 +216,14 @@ Translations:
       label: Stopp!
     stop:
       label: Hammertime
+```
+battery_entity:
+Note: battery level was moved from an attribute to a sensor in many integrations, see (https://developers.home-assistant.io/blog/2025/07/02/vacuum-battery-properties-deprecated/)
+```yaml
+- type: custom:xiaomi-vacuum-card
+  entity: vacuum.xiaomi_vacuum_cleaner
+  battery_entity: sensor.vacuum_cleaner_battery
+  vendor: valetudo
 ```
 
 ## Disclaimer
