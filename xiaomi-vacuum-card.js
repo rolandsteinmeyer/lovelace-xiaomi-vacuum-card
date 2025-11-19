@@ -287,6 +287,11 @@
             const isValidSensorData = data && `${this.config.sensorEntity}_${data.key}` in this._hass.states;
             const isValidAttribute = data && data.key in this.stateObj.attributes;
             const isValidEntityData = data && data.key in this.stateObj;
+            // NEW battery override support
+            const externalBattery =
+                data.key === 'battery_level' &&
+                this.config.battery_entity &&
+                this.config.battery_entity in this._hass.states;
 
             const value = isValidSensorData
                 ? computeFunc(this._hass.states[`${this.config.sensorEntity}_${data.key}`].state) + (data.unit || '')
@@ -295,6 +300,10 @@
                     : isValidEntityData
                         ? computeFunc(this.stateObj[data.key]) + (data.unit || '')
                         : null;
+            // --- NEW: override with external battery value ---
+            if (externalBattery) {
+               value = computeFunc(this._hass.states[this.config.battery_entity].state) + (data.unit || '');
+            }
             const attribute = html`<div>
                 ${data.icon && this.renderIcon(data)}
                 ${(data.label || '') + (value !== null ? value : this._hass.localize('state.default.unavailable'))}
@@ -369,6 +378,7 @@
                 name: config.name,
                 entity: config.entity,
                 sensorEntity: `sensor.${config.entity.split('.')[1]}`,
+                battery_entity: config.battery_entity,
                 show: {
                     name: config.name !== false,
                     state: config.state !== false,
