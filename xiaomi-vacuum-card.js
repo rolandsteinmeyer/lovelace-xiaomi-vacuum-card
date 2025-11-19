@@ -293,7 +293,7 @@
                 this.config.battery_entity &&
                 this.config.battery_entity in this._hass.states;
 
-            const value = isValidSensorData
+            let value = isValidSensorData
                 ? computeFunc(this._hass.states[`${this.config.sensorEntity}_${data.key}`].state) + (data.unit || '')
                 : isValidAttribute
                     ? computeFunc(this.stateObj.attributes[data.key]) + (data.unit || '')
@@ -370,7 +370,7 @@
         setConfig(config) {
             if (!config.entity) throw new Error('Please define an entity.');
             if (config.entity.split('.')[0] !== 'vacuum') throw new Error('Please define a vacuum entity.');
-            if (config.vendor && !config.vendor in vendors) throw new Error('Please define a valid vendor.');
+            if (config.vendor && !(config.vendor in vendors)) throw new Error('Please define a valid vendor.');
 
             const vendor = vendors[config.vendor] || vendors.xiaomi;
 
